@@ -14,11 +14,17 @@ Before uploading to HCS, file data must be formatted correctly by following thes
   - ``` const compressedFile = await compress(file, 10);  ```
   - We recommend using a compression level of 10, but any compression level should work.
 2. After compressing, the resulting data (typically a buffer) should be converted into a base64 string
-3. The final base64 string should chunked into segments smaller than 1024 bytes. Each chunk is chunk is encapsulated in a JSON object with two attributes:
+3. The final base64 string should chunked into segments no greater than 1024 bytes. Each chunk is encapsulated in a JSON object with two attributes:
 
 - `o`: The order index indicating the chunk's sequence in the overall file.
-- `c`: The chunk's content, a substring of the base64-encoded file.
+- `c`: The chunk's content, a substring of the base64-encoded file. The first chunk aka, `o = 0` should include a data prefix for the mime type.
 
+The format for the data prefix is
+```data:[mimeType];base64```
+For example:
+```data:image/png;base64,```
+
+The format for each chunk in a message is as follows:
 ```json
 {
   "o": 0,
