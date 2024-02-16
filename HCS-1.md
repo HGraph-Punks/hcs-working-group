@@ -2,8 +2,24 @@
 
 The HCS-1 standard provides a systematic approach to encode, chunk, upload, retrieve, and reassemble file data for applications using Hedera Consensus Service (HCS). This process is agnostic of the implementation details, focusing on the JSON structure and the use of a registry for efficient data management.
 
-#### Topic Creation
- HCS-1 topics must include a SHA-256 hash of the file being uploaded as the memo. If the contents of the file are updated, the memo must be updated with the new SHA-256 hash to reflect those changes. Viewers of HCS-1 data will read the memo to understand if the file data is valid by comparing it to the original hash.
+#### HCS-1 Topic Id Memo Format
+ HCS-1 topics must include a SHA-256 hash of the file being uploaded, the compression algorithm being used, and the encoding as the memo. If the contents of the file are updated, the memo must be updated with the new SHA-256 hash to reflect those changes. Viewers of HCS-1 data will read the memo to understand if the file data is valid by comparing it to the original hash.
+
+ ### Memo Structure
+
+ The format for the memo is as follows:
+
+ ```[hash]:[algo]:[encoding]```
+
+ - [hash] is the SHA-256 hash of the file being uploaded before any compression
+ - [algo] is the compression algorithm being used, for example, `zstd`
+ - [encoding] is the encoding used to store the compressed file
+
+ For example a valid memo would like:
+
+ ```532eaabd9574880dbf76b9b8cc00832c20a6ec113d682299550d7a6e0f345e25:zstd:base64```
+
+ At this time, only zstd and base64 encoding are supported. If you'd like a different compression algorithm or encoding to be approved, please raise a pull request.
 
 #### Encoding and Chunking
 
